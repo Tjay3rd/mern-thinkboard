@@ -1,9 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
+
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate} from "react-router-dom";
 import api from "../components/utils";
+import type { FormEvent, ChangeEvent } from "react";
 
 
 function CreatePage () {
@@ -14,7 +15,7 @@ function CreatePage () {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     if(!title.trim() || !content.trim()) {
@@ -48,7 +49,7 @@ function CreatePage () {
           <div className="card bg-base-100">
             <div className="card-body">
               <h2 className="card-title text-2xl mb-4">Create New Note</h2>
-              <form id='create-form' onSubmit={handleSubmit}>
+              <form id='create-form' onSubmit={() => handleSubmit}>
                 <fieldset className="field flex flex-col gap-1 mb-4">
                   <label className="label">
                     <span className='label-text'>Title</span>
@@ -57,7 +58,7 @@ function CreatePage () {
                               placeholder="Note Title" 
                               className='input input-bordered w-full' 
                               value={title} 
-                              onChange={(e) => setTitle(e.target.value)}/>
+                              onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}/>
                 </fieldset>
                 <fieldset className="field flex flex-col gap-1 mb-4">
                   <label className="label">
@@ -66,7 +67,7 @@ function CreatePage () {
                   <textarea placeholder="Write your content here..." 
                                     className='textarea textarea-bordered w-full' 
                                     value={content} 
-                                    onChange={(e) => setContent(e.target.value)}/>
+                                    onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value)}/>
                 </fieldset>
               </form>
               <div className="card-actions justify-end">

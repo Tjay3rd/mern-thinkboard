@@ -2,16 +2,29 @@ import { PenSquareIcon, Trash2Icon } from "lucide-react";
 import { Link } from "react-router-dom";
 import api, { formatDate } from "./utils";
 import toast from "react-hot-toast";
+import type { Dispatch, SetStateAction, MouseEvent } from "react";
 
-function NoteCard ({note, setNotes}) {
+interface Note {
+    _id: string;
+    title: string;
+    content: string;
+    createdAt: string;
+}
 
-    const handleDelete = (e, id) => {
+interface Props {
+    note: Note;
+    setNotes: Dispatch<SetStateAction<Note[]>>;
+}
+
+function NoteCard ({note, setNotes}: Props) {
+
+    const handleDelete = async (e: MouseEvent<HTMLButtonElement>, id: string) => {
         e.preventDefault();
 
         if(!window.confirm('Are you sure you want to delete this note')) return;
         
         try {
-            api.delete(`/${id}`)
+            await api.delete(`/${id}`)
             setNotes((prev) => prev.filter(note => note._id !== id))
             toast.success('Note deleted successfully')
         } catch (error) {

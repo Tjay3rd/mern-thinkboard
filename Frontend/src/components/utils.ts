@@ -4,7 +4,7 @@ const api = axios.create({
     baseURL: 'http://localhost:7000/api/notes'
 });
 
-export function formatDate (date) {
+export function formatDate (date: Date): string {
     return date.toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
