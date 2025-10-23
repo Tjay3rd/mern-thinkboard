@@ -22,19 +22,19 @@ function CreatePage () {
       toast.error("All fields are required");
       return;
     }
-    setLoading(true)
+    setLoading(true);
     try {
       await api.post('/', {
         title,
         content
-      })
+      });
       toast.success('Note created successfully');
-      navigate('/')
+      navigate('/');
     } catch (error) {
       console.error("Error creating note:", error);
-      toast.error('Failed to create note!')
+      toast.error('Failed to create note!');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
