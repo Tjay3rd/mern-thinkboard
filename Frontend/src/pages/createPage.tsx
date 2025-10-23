@@ -15,7 +15,7 @@ function CreatePage () {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: FormEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if(!title.trim() || !content.trim()) {
@@ -49,7 +49,7 @@ function CreatePage () {
           <div className="card bg-base-100">
             <div className="card-body">
               <h2 className="card-title text-2xl mb-4">Create New Note</h2>
-              <form id='create-form' onSubmit={() => handleSubmit}>
+              <form id='create-form' onSubmit={handleSubmit}>
                 <fieldset className="field flex flex-col gap-1 mb-4">
                   <label className="label">
                     <span className='label-text'>Title</span>
