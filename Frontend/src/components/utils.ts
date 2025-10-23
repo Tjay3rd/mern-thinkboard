@@ -10,7 +10,7 @@ declare global {
   }
 }
 
-const BASE_URL = import.meta.env.MODE === "development" ? 'http://localhost:7000/api/notes' : 'https://api.example.com/notes';
+const BASE_URL = import.meta.env.MODE === "development" ? 'http://localhost:7000/api/notes' : 'https://mern-thinkboard-8for.onrender.com';
 const api = axios.create({
     baseURL: BASE_URL
 });
