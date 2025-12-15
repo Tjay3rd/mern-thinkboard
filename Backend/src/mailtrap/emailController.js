@@ -12,7 +12,7 @@ export async function sendVerificationEmail(email, verificationToken) {
 		const response = await mailTrapClient.send({
 			from: sender,
 			to: receipient,
-			subject: "Auth test, Verifying Email",
+			subject: "Verifying Email",
 			html: VERIFICATION_EMAIL_TEMPLATE.replace(
 				"{verificationCode}",
 				verificationToken

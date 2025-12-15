@@ -1,7 +1,7 @@
 import { PenSquareIcon, Trash2Icon } from "lucide-react";
 import { Link } from "react-router-dom";
-import api, { formatDate } from "./utils";
-import toast from "react-hot-toast";
+import { formatDate } from "./utils";
+import { useNoteStore } from "../store/noteStore";
 import type { Dispatch, SetStateAction, MouseEvent } from "react";
 
 interface Note {
@@ -9,6 +9,10 @@ interface Note {
 	title: string;
 	content: string;
 	createdAt: string;
+	updatedAt: string;
+	userId: {
+		name: string;
+	};
 }
 
 interface Props {
@@ -17,21 +21,18 @@ interface Props {
 }
 
 function NoteCard({ note, setNotes }: Props) {
+	const { deleteNotecard } = useNoteStore();
+
 	const handleDelete = async (e: MouseEvent<HTMLButtonElement>, id: string) => {
 		e.preventDefault();
 
 		if (!window.confirm("Are you sure you want to delete this note")) return;
 
-		try {
-			await api.delete(`/${id}`);
-			setNotes((prev) => prev.filter((note) => note._id !== id));
-			toast.success("Note deleted successfully");
-		} catch (error) {
-			console.error("Failed to delete note:", error);
-			toast.error("Failed to delete note!");
-		}
+		deleteNotecard(id, setNotes);
 	};
 
+	const dateCreated = formatDate(new Date(note.createdAt));
+	const dateUpdated = formatDate(new Date(note.updatedAt));
 	return (
 		<Link
 			to={`/note/${note._id}`}
@@ -40,9 +41,14 @@ function NoteCard({ note, setNotes }: Props) {
 			<div className="card-body">
 				<h3 className="card-title text-base-content">{note.title}</h3>
 				<p className="text-base-content/70 line-clamp-2">{note.content}</p>
-				<div className="card-actions justify-between items-center mt-4">
+				<div className="card-actions justify-between items-center mt-6 ">
 					<span className="text-sm text-base-content/60">
-						{formatDate(new Date(note.createdAt))}
+						{note.createdAt === note.updatedAt ? (
+							<p> {dateCreated}</p>
+						) : (
+							<p>Updated: {dateUpdated}</p>
+						)}
+						Author: {note.userId.name}
 					</span>
 					<div className="flex items-center gap-1">
 						<button className="btn btn-ghost btn-xs">

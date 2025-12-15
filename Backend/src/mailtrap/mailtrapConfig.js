@@ -12,14 +12,4 @@ export const sender = {
 	email: "mailtrap@demomailtrap.com",
 	name: "Thinkboard Team",
 };
-const receipients = [{ email }];
-
-client
-	.send({
-		from: sender,
-		to: receipients,
-		subject: "You are really awesome bud",
-		html: "",
-		category: "Integration Test",
-	})
-	.then(console.error(error));
+//const receipients = [{ email }];

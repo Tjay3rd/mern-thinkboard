@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, type FormEvent } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, LoaderIcon, Trash2Icon } from "lucide-react";
-import api from "../notesComponents/utils";
 import toast from "react-hot-toast";
+import { useNoteStore } from "../store/noteStore";
 
 interface Note {
 	_id: string;
@@ -18,28 +19,19 @@ function NoteDetailPage() {
 		content: "",
 		createdAt: "",
 	});
-	const [loading, setLoading] = useState(true);
+
 	const [saving, setSaving] = useState(false);
 
-	const navigate = useNavigate();
+	const { isLoading, fetchNote, updateNote, deleteNote } = useNoteStore();
+
 	const { id } = useParams<{ id: string }>();
+	const navigate = useNavigate();
 
 	useEffect(() => {
-		const fetchNote = async () => {
-			try {
-				const res = await api.get<Note>(`/${id}`);
-				setNote(res.data);
-			} catch (error) {
-				toast.error("Couldn't fetch note");
-				console.error("Error fetching note:", error);
-			} finally {
-				setLoading(false);
-			}
-		};
-		fetchNote();
+		fetchNote(id, setNote);
 	}, [id]);
 
-	if (loading) {
+	if (isLoading) {
 		return (
 			<div className="min-h-screen bg-200 flex items-center justify-center">
 				<LoaderIcon className="animate-spin size-10" />
@@ -54,29 +46,16 @@ function NoteDetailPage() {
 			return;
 		}
 		setSaving(true);
-		try {
-			await api.patch(`/${id}`, note);
-			toast.success("Note Updated successfully");
-			navigate("/");
-		} catch (error) {
-			toast.error("Failed to save note");
-			console.error("Error saving note", error);
-		} finally {
-			setSaving(false);
-		}
+
+		updateNote(id, note, navigate);
+
+		setSaving(false);
 	};
 
 	const handleDelete = async () => {
 		if (!window.confirm("Are you sure you want to delete this note")) return;
 
-		try {
-			await api.delete(`/${id}`);
-			toast.success("Note deleted successfully");
-			navigate("/");
-		} catch (error) {
-			console.error("Failed to delete note:", error);
-			toast.error("Failed to delete note!");
-		}
+		deleteNote(id, navigate);
 	};
 
 	return (

@@ -2,14 +2,14 @@ import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../notesComponents/utils";
 import type { FormEvent, ChangeEvent } from "react";
+import { useNoteStore } from "../store/noteStore";
 
 function CreatePage() {
 	const [title, setTitle] = useState("");
 	const [content, setContent] = useState("");
-	const [loading, setLoading] = useState(false);
 
+	const { createNote, isLoading } = useNoteStore();
 	const navigate = useNavigate();
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -19,20 +19,7 @@ function CreatePage() {
 			toast.error("All fields are required");
 			return;
 		}
-		setLoading(true);
-		try {
-			await api.post("/", {
-				title,
-				content,
-			});
-			toast.success("Note created successfully");
-			navigate("/");
-		} catch (error) {
-			console.error("Error creating note:", error);
-			toast.error("Failed to create note!");
-		} finally {
-			setLoading(false);
-		}
+		createNote(title, content, navigate);
 	};
 
 	return (
@@ -80,9 +67,9 @@ function CreatePage() {
 									form="create-form"
 									type="submit"
 									className="btn btn-primary"
-									disabled={loading}
+									disabled={isLoading}
 								>
-									{loading ? "Creating..." : "Create Note"}
+									{isLoading ? "Creating..." : "Create Note"}
 								</button>
 							</div>
 						</div>

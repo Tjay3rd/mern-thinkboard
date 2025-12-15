@@ -1,4 +1,4 @@
-import express, { Router } from "express";
+import { Router } from "express";
 import {
 	getNotes,
 	getNote,
@@ -8,10 +8,7 @@ import {
 } from "../controllers/notesController.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 
-const app = express();
 const router = Router();
-
-app.use(express.json());
 
 router.get("/", verifyToken, getNotes);
 
@@ -19,7 +16,7 @@ router.get("/:id", verifyToken, getNote);
 
 router.post("/", verifyToken, createNote);
 
-router.patch("/:id", updateNote);
+router.patch("/:id", verifyToken, updateNote);
 
 router.delete("/:id", verifyToken, deleteNote);
 

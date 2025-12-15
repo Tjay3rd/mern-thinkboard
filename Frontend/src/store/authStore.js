@@ -1,14 +1,19 @@
 import { create } from "zustand";
 import axios from "axios";
 
-const BASE_URL = "http://localhost:7000/api/auth";
+const BASE_URL =
+	import.meta.env.VITE_MODE === "development"
+		? "http://localhost:7000/api/auth"
+		: "/api/authS";
+
 axios.defaults.withCredentials = true;
+
 export const useAuthStore = create((set) => ({
 	user: null,
 	isAuthenticated: false,
 	error: null,
 	isLoading: false,
-	isChecking: true,
+	isCheckingAuth: true,
 	message: null,
 
 	checkAuth: async () => {
@@ -80,7 +85,7 @@ export const useAuthStore = create((set) => ({
 			});
 		} catch (error) {
 			set({
-				error: error.response.data.message || "Error logging in",
+				error: error.response.data.message || "Incorrect Username or Password",
 				isLoading: false,
 			});
 			throw error;

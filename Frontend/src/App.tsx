@@ -45,9 +45,9 @@ const App = () => {
 	return (
 		<div
 			data-theme="forest"
-			className="h-full w-full absolute inset-0 -z-10 items-center bg-[radial-gradient(125%_125%_at_50%_10%,#000_60%,#00FF9D40_100%)]"
+			className="absolute overflow-y-auto h-full w-full inset-0 -z-10 items-center bg-[radial-gradient(125%_125%_at_50%_10%,#000_60%,#00FF9D40_100%)]"
 		>
-			<div className="bg-transparent">
+			<div className="">
 				<Routes>
 					<Route
 						path="/"
