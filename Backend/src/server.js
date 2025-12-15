@@ -33,9 +33,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/notes", notesRoutes);
 
 if (process.env.NODE_ENV === "production") {
-	app.use(express.static(path.join(__dirname, "../../frontend/dist")));
+	app.use(express.static(path.join(__dirname, "../../Frontend/dist")));
 	app.get(/(.*)/, (_, res) => {
-		res.sendFile(path.join(__dirname, "../../frontend", "dist", "index.html"));
+		res.sendFile(path.join(__dirname, "../../Frontend", "dist", "index.html"));
 	});
 }
 
