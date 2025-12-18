@@ -4,7 +4,7 @@ import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import notesRoutes from "./routes/notesRoutes.js";
 import rateLimiter from "./middleware/rateLimiter.js";
-import { connectDB } from ".config/db.js";
+import { connectDB } from "./config/db.js";
 import cookieParser from "cookie-parser";
 import path from "path";
 import { fileURLToPath } from "url";
