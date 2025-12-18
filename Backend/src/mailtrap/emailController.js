@@ -7,7 +7,7 @@ import {
 } from "./emailTemplates.js";
 
 export async function sendVerificationEmail(email, verificationToken) {
-	const receipient = [email];
+	const receipient = email;
 	try {
 		const response = await transporter.sendMail({
 			from: `"${sender.name}" <${sender.address}>`,
@@ -17,17 +17,16 @@ export async function sendVerificationEmail(email, verificationToken) {
 				"{verificationCode}",
 				verificationToken
 			),
-			category: "email Verification",
 		});
 		console.log("email sent successfully", response);
 	} catch (error) {
-		console.log("Error sending verification Email");
+		console.error("DEBUG - Gmail Error:", error);
 		throw new Error("Error sending verification email", error);
 	}
 }
 
 export async function sendWelcomeEmail(email, name) {
-	const receipient = [email];
+	const receipient = email;
 
 	try {
 		await transporter.sendMail({
@@ -35,7 +34,6 @@ export async function sendWelcomeEmail(email, name) {
 			to: receipient,
 			subject: "Welcome email",
 			html: WELCOME_EMAIL_TEMPLATE.replace("{name}", name),
-			category: "Welcome Email",
 		});
 
 		console.log("Email sent sucessfully");
@@ -46,7 +44,7 @@ export async function sendWelcomeEmail(email, name) {
 }
 
 export async function sendPasswordResetEmail(email, resetUrl) {
-	const receipient = [email];
+	const receipient = email;
 
 	try {
 		await transporter.sendMail({
@@ -54,7 +52,6 @@ export async function sendPasswordResetEmail(email, resetUrl) {
 			to: receipient,
 			subject: "Reset Your Password",
 			html: PASSWORD_RESET_REQUEST_TEMPLATE.replace("{resetURL}", resetUrl),
-			category: "Password Reset",
 		});
 
 		console.log("Email sent sucessfully");
@@ -65,7 +62,7 @@ export async function sendPasswordResetEmail(email, resetUrl) {
 }
 
 export async function sendResetSuccessEmail(email) {
-	const receipient = [email];
+	const receipient = email;
 
 	try {
 		await transporter.sendMail({
@@ -73,7 +70,6 @@ export async function sendResetSuccessEmail(email) {
 			to: receipient,
 			subject: "Password reset successful",
 			html: PASSWORD_RESET_SUCCESS_TEMPLATE,
-			category: "Password Reset",
 		});
 
 		console.log("Email sent sucessfully");
