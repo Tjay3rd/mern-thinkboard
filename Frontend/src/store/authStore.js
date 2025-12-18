@@ -4,7 +4,7 @@ import axios from "axios";
 const BASE_URL =
 	import.meta.env.VITE_MODE === "development"
 		? "http://localhost:7000/api/auth"
-		: "/api/authS";
+		: "/api/auth";
 
 axios.defaults.withCredentials = true;
 
