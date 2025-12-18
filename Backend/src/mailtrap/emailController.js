@@ -1,4 +1,4 @@
-import { mailTrapClient, sender } from "./mailtrapConfig.js";
+import { sender, transporter } from "./mailtrapConfig.js";
 import {
 	VERIFICATION_EMAIL_TEMPLATE,
 	WELCOME_EMAIL_TEMPLATE,
@@ -7,10 +7,10 @@ import {
 } from "./emailTemplates.js";
 
 export async function sendVerificationEmail(email, verificationToken) {
-	const receipient = [{ email }];
+	const receipient = [email];
 	try {
-		const response = await mailTrapClient.send({
-			from: sender,
+		const response = await transporter.sendMail({
+			from: `"${sender.name}" <${sender.address}>`,
 			to: receipient,
 			subject: "Verifying Email",
 			html: VERIFICATION_EMAIL_TEMPLATE.replace(
@@ -27,11 +27,11 @@ export async function sendVerificationEmail(email, verificationToken) {
 }
 
 export async function sendWelcomeEmail(email, name) {
-	const receipient = [{ email }];
+	const receipient = [email];
 
 	try {
-		await mailTrapClient.send({
-			from: sender,
+		await transporter.sendMail({
+			from: `"${sender.name}" <${sender.address}>`,
 			to: receipient,
 			subject: "Welcome email",
 			html: WELCOME_EMAIL_TEMPLATE.replace("{name}", name),
@@ -46,11 +46,11 @@ export async function sendWelcomeEmail(email, name) {
 }
 
 export async function sendPasswordResetEmail(email, resetUrl) {
-	const receipient = [{ email }];
+	const receipient = [email];
 
 	try {
-		await mailTrapClient.send({
-			from: sender,
+		await transporter.sendMail({
+			from: `"${sender.name}" <${sender.address}>`,
 			to: receipient,
 			subject: "Reset Your Password",
 			html: PASSWORD_RESET_REQUEST_TEMPLATE.replace("{resetURL}", resetUrl),
@@ -65,11 +65,11 @@ export async function sendPasswordResetEmail(email, resetUrl) {
 }
 
 export async function sendResetSuccessEmail(email) {
-	const receipient = [{ email }];
+	const receipient = [email];
 
 	try {
-		await mailTrapClient.send({
-			from: sender,
+		await transporter.sendMail({
+			from: `"${sender.name}" <${sender.address}>`,
 			to: receipient,
 			subject: "Password reset successful",
 			html: PASSWORD_RESET_SUCCESS_TEMPLATE,
