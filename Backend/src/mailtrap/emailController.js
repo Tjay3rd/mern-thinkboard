@@ -22,6 +22,7 @@ export async function sendVerificationEmail(email, verificationToken) {
 	} catch (error) {
 		console.error("DEBUG - Gmail Error:", error);
 		throw new Error("Error sending verification email", error);
+		return { error: true, message: error.message };
 	}
 }
 
