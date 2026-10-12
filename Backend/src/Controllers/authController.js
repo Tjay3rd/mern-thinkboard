@@ -6,7 +6,7 @@ import {
 	sendWelcomeEmail,
 	sendPasswordResetEmail,
 	sendResetSuccessEmail,
-} from "../mailtrap/emailController.js";
+} from "../resend/emailController.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -14,10 +14,7 @@ dotenv.config();
 export async function checkAuth(req, res) {
 	try {
 		const user = await User.findById(req.userId).select("-password");
-		if (!user)
-			return res
-				.status(400)
-				.json({ success: false, message: "User not found" });
+		if (!user) return res.status(400).json({ success: false, message: "User not found" });
 		res.status(200).json({ success: true, user });
 	} catch (error) {
 		console.log(error);
@@ -33,14 +30,10 @@ export async function signUp(req, res) {
 		}
 		const userAlreadyExists = await User.findOne({ email });
 		if (userAlreadyExists) {
-			return res
-				.status(400)
-				.json({ success: false, message: "User Already Exists" });
+			return res.status(400).json({ success: false, message: "User Already Exists" });
 		}
 
-		const verificationToken = Math.floor(
-			100000 + Math.random() * 900000
-		).toString();
+		const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
 
 		const Newuser = new User({
 			email,
@@ -102,15 +95,11 @@ export async function login(req, res) {
 	try {
 		const user = await User.findOne({ email });
 		if (!user) {
-			return res
-				.status(400)
-				.json({ success: false, message: "Invalid credentials" });
+			return res.status(400).json({ success: false, message: "Invalid credentials" });
 		}
 		const isPasswordtrue = await user.comparePassword(password);
 		if (!isPasswordtrue) {
-			return res
-				.status(400)
-				.json({ success: false, message: "Invalid credentials" });
+			return res.status(400).json({ success: false, message: "Invalid credentials" });
 		}
 		generateTokenAndSetCookie(res, user._id);
 		user.lastLogin = Date.now();
@@ -128,9 +117,7 @@ export async function login(req, res) {
 
 export async function logout(_, res) {
 	res.clearCookie("token");
-	res
-		.status(200)
-		.json({ success: true, message: "User logged out successfully" });
+	res.status(200).json({ success: true, message: "User logged out successfully" });
 }
 
 export async function forgotPassword(req, res) {
@@ -138,9 +125,7 @@ export async function forgotPassword(req, res) {
 	try {
 		const user = await User.findOne({ email });
 		if (!user) {
-			return res
-				.status(400)
-				.json({ success: false, message: "User not found" });
+			return res.status(400).json({ success: false, message: "User not found" });
 		}
 		const token = crypto.randomBytes(25).toString("hex");
 		const tokenExpiry = Date.now() + 1000 * 60 * 60;
@@ -149,19 +134,14 @@ export async function forgotPassword(req, res) {
 		user.resetPasswordExpiresAt = tokenExpiry;
 
 		await user.save();
-		await sendPasswordResetEmail(
-			user.email,
-			`${process.env.CLIENT_URL}/reset-password/${token}`
-		);
+		await sendPasswordResetEmail(user.email, `${process.env.CLIENT_URL}/reset-password/${token}`);
 		res.status(200).json({
 			success: true,
 			message: "Password reset link sent to your email",
 		});
 	} catch (error) {
 		console.log(error);
-		res
-			.status(400)
-			.json({ success: false, message: "Error resetting password" });
+		res.status(400).json({ success: false, message: "Error resetting password" });
 	}
 }
 
@@ -174,9 +154,7 @@ export async function resetPassword(req, res) {
 			resetPasswordExpiresAt: { $gt: Date.now() },
 		});
 		if (!user) {
-			return res
-				.status(400)
-				.json({ success: false, message: "Invalid or expired token" });
+			return res.status(400).json({ success: false, message: "Invalid or expired token" });
 		}
 
 		user.password = password;
@@ -185,13 +163,9 @@ export async function resetPassword(req, res) {
 		await user.save();
 
 		await sendResetSuccessEmail(user.email);
-		res
-			.status(200)
-			.json({ success: true, message: "Password reset successfully" });
+		res.status(200).json({ success: true, message: "Password reset successfully" });
 	} catch (error) {
 		console.log(error);
-		res
-			.status(400)
-			.json({ success: false, message: "Error resetting password" });
+		res.status(400).json({ success: false, message: "Error resetting password" });
 	}
 }

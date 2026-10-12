@@ -3,11 +3,11 @@ import dotenv from "dotenv";
 import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import notesRoutes from "./routes/notesRoutes.js";
-//import rateLimiter from "./middleware/rateLimiter.js";
 import { connectDB } from "./config/db.js";
 import cookieParser from "cookie-parser";
 import path from "path";
 import { fileURLToPath } from "url";
+import rateLimit from "express-rate-limit";
 
 dotenv.config();
 
@@ -17,18 +17,24 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = process.env.PORT || 7000;
+const limiter = rateLimit({
+	windowMs: 10 * 60 * 1000, // 10 minutes
+	max: 100,
+	standardHeaders: "draft-8",
+	legacyHeaders: false,
+});
 
 if (process.env.NODE_ENV !== "production") {
 	app.use(
 		cors({
 			origin: "http://localhost:5173",
 			credentials: true,
-		})
+		}),
 	);
 }
 app.use(express.json());
 app.use(cookieParser());
-//app.use(rateLimiter);
+app.use("/api/", limiter);
 app.use("/api/auth", authRoutes);
 app.use("/api/notes", notesRoutes);
 
