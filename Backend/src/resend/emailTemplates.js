@@ -99,7 +99,7 @@ export const WELCOME_EMAIL_TEMPLATE = `
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Password Reset Successful</title>
+		<title>Welcome Email</title>
 	</head>
 	<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto;	padding: 20px;">
 		<div style="background: linear-gradient(to right, #4caf50, #45a049); padding: 20px; text-align: center;">
